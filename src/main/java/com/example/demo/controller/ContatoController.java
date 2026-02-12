@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ContatoRequestDTO;
 import com.example.demo.Service.ContatoService;
-import com.example.demo.model.Contato;
 import com.example.demo.repository.ContatoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,23 +23,23 @@ public class ContatoController {
     }
 
     @GetMapping
-    public List<Contato> findAll(){
+    public List<ContatoRequestDTO> findAll(){
         return contatoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Contato findById(@PathVariable Long id){
+    public ContatoRequestDTO findById(@PathVariable Long id){
         return contatoService.findById(id);
     }
 
     @PostMapping
-    public Contato saveContato(@RequestBody Contato contato){
-        return contatoService.save(contato);
+    public ContatoRequestDTO saveContato(@Valid @RequestBody ContatoRequestDTO contatoRequestDTO){
+        return contatoService.save(contatoRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public Contato update(@PathVariable Long id, @RequestBody Contato contato){
-        return contatoService.update(id, contato);
+    public ContatoRequestDTO update(@PathVariable Long id, @Valid @RequestBody ContatoRequestDTO contatoRequestDTO){
+        return contatoService.update(id, contatoRequestDTO);
     }
 
     @DeleteMapping("/{id}")

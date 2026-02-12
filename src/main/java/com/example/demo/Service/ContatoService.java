@@ -1,11 +1,11 @@
 package com.example.demo.Service;
 
+import com.example.demo.dto.ContatoRequestDTO;
 import com.example.demo.model.Contato;
 import com.example.demo.repository.ContatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,35 +20,60 @@ public class ContatoService {
         this.contatoRepository = contatoRepository;
     }
 
-    public Contato save(Contato contato){
+    public ContatoRequestDTO save(ContatoRequestDTO contatoRequestDTO){
 
-        return contatoRepository.save(contato);
+        Contato contato = new Contato();
+
+        contato.setNome(contatoRequestDTO.getNome());
+        contato.setTelefone(contatoRequestDTO.getTelefone());
+
+        contatoRepository.save(contato);
+
+        return new ContatoRequestDTO(contato.getNome(), contato.getTelefone());
     }
 
-    public List<Contato> findAll(){
-        return contatoRepository.findAll();
+    public List<ContatoRequestDTO> findAll(){
+
+        List<Contato> listContatos = contatoRepository.findAll();
+
+        return listContatos.stream().
+                map(entidade -> new ContatoRequestDTO(entidade.getNome(), entidade.getTelefone())).
+                toList();
     }
 
-    public Contato findById(Long id){
-        return contatoRepository.findById(id)
+    public ContatoRequestDTO findById(Long id){
+
+        Contato contato = contatoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id));
+
+        return new ContatoRequestDTO(contato.getNome(), contato.getTelefone());
     }
 
-    public Contato update(Long id, Contato contato){
-        Contato newContato = contatoRepository.findById(id).get();
+    public ContatoRequestDTO update(Long id, ContatoRequestDTO contatoRequestDTO){
+        Contato newContato = contatoRepository.findById(id).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id
+                ));
 
-        newContato.setNome(contato.getNome());
-        newContato.setTelefone(contato.getTelefone());
+        newContato.setNome(contatoRequestDTO.getNome());
+        newContato.setTelefone(contatoRequestDTO.getTelefone());
 
         contatoRepository.save(newContato);
 
-        return newContato;
+        ContatoRequestDTO newContatoRequestDTO = new ContatoRequestDTO();
+
+        newContatoRequestDTO.setNome(newContato.getNome());
+        newContatoRequestDTO.setTelefone(newContato.getTelefone());
+
+        return newContatoRequestDTO;
     }
 
     public void delete(Long id){
 
-        Contato contatoDelete = contatoRepository.findById(id).get();
+        Contato contatoDelete = contatoRepository.findById(id).
+                orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id));
 
         contatoRepository.delete(contatoDelete);
     }
