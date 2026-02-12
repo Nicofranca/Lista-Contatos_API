@@ -1,6 +1,8 @@
 package com.example.demo.Service;
 
 import com.example.demo.dto.ContatoRequestDTO;
+import com.example.demo.dto.ContatoResponseDTO;
+import com.example.demo.mapper.ContatoMapper;
 import com.example.demo.model.Contato;
 import com.example.demo.repository.ContatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,48 +11,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class ContatoService {
 
-    private ContatoRepository contatoRepository;
+    private final ContatoRepository contatoRepository;
+    private final ContatoMapper contatoMapper;
 
     @Autowired
-    public ContatoService(ContatoRepository contatoRepository){
+    public ContatoService(ContatoRepository contatoRepository, ContatoMapper contatoMapper){
         this.contatoRepository = contatoRepository;
+        this.contatoMapper = contatoMapper;
     }
 
-    public ContatoRequestDTO save(ContatoRequestDTO contatoRequestDTO){
+    public ContatoResponseDTO save(ContatoRequestDTO contatoRequestDTO){
+        Contato contato = contatoMapper.requestToEntity(contatoRequestDTO);
+        Contato contatoSalvo = contatoRepository.save(contato);
 
-        Contato contato = new Contato();
-
-        contato.setNome(contatoRequestDTO.getNome());
-        contato.setTelefone(contatoRequestDTO.getTelefone());
-
-        contatoRepository.save(contato);
-
-        return new ContatoRequestDTO(contato.getNome(), contato.getTelefone());
+        return contatoMapper.entityResponse(contatoSalvo);
     }
 
-    public List<ContatoRequestDTO> findAll(){
-
-        List<Contato> listContatos = contatoRepository.findAll();
-
-        return listContatos.stream().
-                map(entidade -> new ContatoRequestDTO(entidade.getNome(), entidade.getTelefone())).
-                toList();
+    public List<ContatoResponseDTO> findAll(){
+        return contatoRepository.findAll().stream()
+                .map(contatoMapper::entityResponse)
+                .toList();
     }
 
-    public ContatoRequestDTO findById(Long id){
-
+    public ContatoResponseDTO findById(Long id){
         Contato contato = contatoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id));
 
-        return new ContatoRequestDTO(contato.getNome(), contato.getTelefone());
+        return contatoMapper.entityResponse(contato);
     }
 
-    public ContatoRequestDTO update(Long id, ContatoRequestDTO contatoRequestDTO){
+    public ContatoResponseDTO update(Long id, ContatoRequestDTO contatoRequestDTO){
         Contato newContato = contatoRepository.findById(id).
                 orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id
@@ -59,14 +56,9 @@ public class ContatoService {
         newContato.setNome(contatoRequestDTO.getNome());
         newContato.setTelefone(contatoRequestDTO.getTelefone());
 
-        contatoRepository.save(newContato);
+        Contato contato = contatoRepository.save(newContato);
 
-        ContatoRequestDTO newContatoRequestDTO = new ContatoRequestDTO();
-
-        newContatoRequestDTO.setNome(newContato.getNome());
-        newContatoRequestDTO.setTelefone(newContato.getTelefone());
-
-        return newContatoRequestDTO;
+        return contatoMapper.entityResponse(contato);
     }
 
     public void delete(Long id){
