@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.Service.ContatoService;
 import com.example.demo.model.Contato;
 import com.example.demo.repository.ContatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,42 +13,37 @@ import java.util.List;
 public class ContatoController {
 
     private final ContatoRepository contatoRepository;
+    private final ContatoService contatoService;
 
     @Autowired
-    public ContatoController(ContatoRepository contatoRepository){
+    public ContatoController(ContatoRepository contatoRepository, ContatoService contatoService){
         this.contatoRepository = contatoRepository;
+        this.contatoService = contatoService;
     }
 
     @GetMapping
     public List<Contato> findAll(){
-        return contatoRepository.findAll();
+        return contatoService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Contato findById(@PathVariable Long id){
+        return contatoService.findById(id);
     }
 
     @PostMapping
     public Contato saveContato(@RequestBody Contato contato){
-        Contato newContato = contatoRepository.save(contato);
-
-        return newContato;
+        return contatoService.save(contato);
     }
 
     @PutMapping("/{id}")
     public Contato update(@PathVariable Long id, @RequestBody Contato contato){
-        Contato newContato = contatoRepository.findById(id).get();
-
-        newContato.setNome(contato.getNome());
-        newContato.setTelefone(contato.getTelefone());
-
-        contatoRepository.save(newContato);
-
-        return newContato;
+        return contatoService.update(id, contato);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-
-        Contato contatoDelete = contatoRepository.findById(id).get();
-
-        contatoRepository.delete(contatoDelete);
+        contatoService.delete(id);
     }
 
 }

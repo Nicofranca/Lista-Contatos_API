@@ -3,8 +3,10 @@ package com.example.demo.Service;
 import com.example.demo.model.Contato;
 import com.example.demo.repository.ContatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,24 +20,37 @@ public class ContatoService {
         this.contatoRepository = contatoRepository;
     }
 
-    @PostMapping
-    public Contato save(@RequestBody Contato contato){
+    public Contato save(Contato contato){
+
         return contatoRepository.save(contato);
     }
 
-    @GetMapping
     public List<Contato> findAll(){
         return contatoRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Contato findById(@PathVariable Long id){
-        Contato newContado = contatoRepository.findById(id).get();
-
-        return newContado;
+    public Contato findById(Long id){
+        return contatoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id));
     }
 
-    @PutMapping("/{id}")
-    private void update()
+    public Contato update(Long id, Contato contato){
+        Contato newContato = contatoRepository.findById(id).get();
+
+        newContato.setNome(contato.getNome());
+        newContato.setTelefone(contato.getTelefone());
+
+        contatoRepository.save(newContato);
+
+        return newContato;
+    }
+
+    public void delete(Long id){
+
+        Contato contatoDelete = contatoRepository.findById(id).get();
+
+        contatoRepository.delete(contatoDelete);
+    }
 
 }
