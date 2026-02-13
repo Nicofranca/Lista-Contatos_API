@@ -2,12 +2,13 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
-public class Error {
+public class ErrorResp {
     private LocalDateTime dataHora;
     private int status;
     private String mensage;
 
-    public Error(int status, String mensage) {
+    public ErrorResp(int status, String mensage) {
+        this.dataHora = LocalDateTime.now();
         this.status = status;
         this.mensage = mensage;
     }
