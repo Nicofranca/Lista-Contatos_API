@@ -12,6 +12,16 @@ public class ContatoRequestDTO {
     @Size(min = 15, max = 15, message = "O telefone deve ter pelo menos 15 digitos - (99)99999-9999")
     private String telefone;
 
+    private Long categoriaId;
+
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
     public ContatoRequestDTO() {
     }
 

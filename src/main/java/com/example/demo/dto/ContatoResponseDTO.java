@@ -4,15 +4,25 @@ public class ContatoResponseDTO {
     private Long id;
     private String nome;
     private String telefone;
+    private String nomeCategoria;
 
-    public ContatoResponseDTO(Long id, String nome, String telefone) {
+    public ContatoResponseDTO(Long id, String nome, String telefone, String nomeCategoria) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
+        this.nomeCategoria = nomeCategoria;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
     }
 
     public void setId(Long id) {

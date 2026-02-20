@@ -1,9 +1,8 @@
-package com.example.demo.controller;
+package com.example.demo.controller.contato;
 
 import com.example.demo.dto.ContatoRequestDTO;
 import com.example.demo.Service.ContatoService;
 import com.example.demo.dto.ContatoResponseDTO;
-import com.example.demo.repository.ContatoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
