@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.ContatoRequestDTO;
-import com.example.demo.dto.ContatoResponseDTO;
+import com.example.demo.dto.contato.ContatoRequestDTO;
+import com.example.demo.dto.contato.ContatoResponseDTO;
 import com.example.demo.model.Categoria;
 import com.example.demo.model.Contato;
 import org.springframework.stereotype.Component;
@@ -13,8 +13,8 @@ public class ContatoMapper {
 
     public Contato requestToEntity(ContatoRequestDTO requestDTO, Categoria categoria){
         Contato contato = new Contato();
-        contato.setNome(requestDTO.getNome());
-        contato.setTelefone(requestDTO.getTelefone());
+        contato.setNome(requestDTO.nome());
+        contato.setTelefone(requestDTO.telefone());
         contato.setCategoria(categoria);
 
         return contato;

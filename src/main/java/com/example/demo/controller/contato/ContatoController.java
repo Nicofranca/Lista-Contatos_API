@@ -1,8 +1,8 @@
 package com.example.demo.controller.contato;
 
-import com.example.demo.dto.ContatoRequestDTO;
+import com.example.demo.dto.contato.ContatoRequestDTO;
 import com.example.demo.Service.ContatoService;
-import com.example.demo.dto.ContatoResponseDTO;
+import com.example.demo.dto.contato.ContatoResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contatos")
+@CrossOrigin("*")
 public class ContatoController {
 
     private final ContatoService contatoService;
 
-    @Autowired
     public ContatoController(ContatoService contatoService){
         this.contatoService = contatoService;
     }

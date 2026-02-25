@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
-import com.example.demo.dto.ContatoRequestDTO;
-import com.example.demo.dto.ContatoResponseDTO;
+import com.example.demo.dto.contato.ContatoRequestDTO;
+import com.example.demo.dto.contato.ContatoResponseDTO;
 import com.example.demo.mapper.ContatoMapper;
 import com.example.demo.model.Categoria;
 import com.example.demo.model.Contato;
@@ -31,11 +31,12 @@ public class ContatoService {
     }
 
     public ContatoResponseDTO save(ContatoRequestDTO contatoRequestDTO){
-        Categoria categoria = categoriaRepository.findById(contatoRequestDTO.getCategoriaId())
+        Categoria categoria = categoriaRepository.findById(contatoRequestDTO.categoriaId())
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Categorira não encontrada com o ID: "+contatoRequestDTO.getCategoriaId()));
+                        HttpStatus.NOT_FOUND, "Categorira não encontrada com o ID: "+contatoRequestDTO.categoriaId()));
 
         Contato contato = contatoMapper.requestToEntity(contatoRequestDTO, categoria);
+
         Contato contatoSalvo = contatoRepository.save(contato);
 
         return contatoMapper.entityResponse(contatoSalvo);
@@ -61,8 +62,8 @@ public class ContatoService {
                         HttpStatus.NOT_FOUND, "Contato não encontrado com o ID: "+id
                 ));
 
-        newContato.setNome(contatoRequestDTO.getNome());
-        newContato.setTelefone(contatoRequestDTO.getTelefone());
+        newContato.setNome(contatoRequestDTO.nome());
+        newContato.setTelefone(contatoRequestDTO.telefone());
 
         Contato contato = contatoRepository.save(newContato);
 

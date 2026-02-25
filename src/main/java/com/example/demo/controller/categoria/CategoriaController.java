@@ -1,5 +1,8 @@
 package com.example.demo.controller.categoria;
 
+import com.example.demo.Service.CategoriaService;
+import com.example.demo.dto.Categoria.CategoriaRequestDTO;
+import com.example.demo.dto.Categoria.CategoriaResponseDTO;
 import com.example.demo.model.Categoria;
 import com.example.demo.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +14,21 @@ import java.util.List;
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-    @Autowired
+
     private CategoriaRepository categoriaRepository;
+    private CategoriaService categoriaService;
+
+    public CategoriaController(CategoriaService categoriaService){
+        this.categoriaService = categoriaService;
+    }
 
     @PostMapping
-    public Categoria save(@RequestBody Categoria categoria){
-        return categoriaRepository.save(categoria);
+    public CategoriaResponseDTO save(@RequestBody CategoriaRequestDTO categoriaRequestDTO){
+        return categoriaService.save(categoriaRequestDTO);
     }
 
     @GetMapping
-    public List<Categoria> findAll(){
-        return categoriaRepository.findAll();
+    public List<CategoriaResponseDTO> findAll(){
+        return categoriaService.findAll();
     }
 }
