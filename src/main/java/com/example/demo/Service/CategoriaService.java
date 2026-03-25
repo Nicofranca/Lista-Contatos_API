@@ -24,6 +24,8 @@ public class CategoriaService {
 
         categoriaRepository.save(categoria);
 
+
+
         return categoriaMapper.responseToEntity(categoria);
     }
 
